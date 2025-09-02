@@ -4,7 +4,7 @@ const authRoutes = require("./routes/auth");
 const walletRoutes = require("./routes/wallet");
 const adminRoutes = require("./routes/admin");
 require("./jobs/scheduler"); // run cron jobs
-
+const cors = require("cors");
 const mongoose = require("mongoose");
 
 const connectDB = async () => {
@@ -25,6 +25,8 @@ connectDB();
 
 const app = express();
 app.use(express.json());
+// Enable CORS for all routes
+app.use(cors());
 
 // Routes
 app.use("/api/auth", authRoutes);
