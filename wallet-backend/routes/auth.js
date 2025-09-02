@@ -6,6 +6,7 @@ const User = require("../models/User");
 const router = express.Router();
 
 // REGISTER
+// REGISTER
 router.post("/register", async (req, res) => {
   try {
     const { name, email, password } = req.body;
@@ -26,7 +27,19 @@ router.post("/register", async (req, res) => {
 
     await newUser.save();
 
-    res.json({ message: "User registered successfully" });
+    // generate token
+    const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, { expiresIn: "1d" });
+
+    res.json({
+      token,
+      user: {
+        id: newUser._id,
+        name: newUser.name,
+        email: newUser.email,
+        walletBalance: newUser.walletBalance,
+        rewardWallet: newUser.rewardWallet,
+      },
+    });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
